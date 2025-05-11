@@ -1,11 +1,10 @@
 server:
   ssl:
-    enabled: false
-  port: 0
-  servlet:
-    context-path: /
-  error:
-    include-message: always
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: fair-dice
 
 spring:
   datasource:
@@ -14,11 +13,10 @@ spring:
     password: password
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 2
-      connection-timeout: 10000
-      max-lifetime: 5000
+      maximum-pool-size: 5
+      connection-timeout: 20000
+      max-lifetime: 10000
       minimum-idle: 1
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -27,7 +25,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
   sql:
     init:
       mode: always
@@ -39,12 +36,3 @@ spring:
 
   thymeleaf:
     enabled: false
-
-logging:
-  level:
-    root: WARN
-    org.springframework.security: DEBUG
-    org.hibernate.SQL: INFO
-
-jwt:
-  secret: NVELselcZPgZBlq26cuspTYyQkh82kG8WAzdQYtDqA8=
