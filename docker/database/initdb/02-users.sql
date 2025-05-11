@@ -1,0 +1,2 @@
+--CREATE USER app_user WITH PASSWORD 'secure_password';
+--GRANT ALL PRIVILEGES ON DATABASE gdpr TO app_user;

@@ -1,0 +1,54 @@
+package org.aueb.fair.dice.secondary.persistence.service;
+
+import org.aueb.fair.dice.adapter.secondary.persistence.entity.UserEntity;
+import org.aueb.fair.dice.adapter.secondary.persistence.mapper.UserEntityMapper;
+import org.aueb.fair.dice.adapter.secondary.persistence.repository.UserRepository;
+import org.aueb.fair.dice.adapter.secondary.persistence.service.UserPersistenceService;
+import org.aueb.fair.dice.domain.user.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+class UserPersistenceServiceTest {
+
+    private UserRepository userRepository;
+    private UserEntityMapper userEntityMapper;
+    private UserPersistenceService service;
+
+    @BeforeEach
+    void setup() {
+        userRepository = mock(UserRepository.class);
+        userEntityMapper = mock(UserEntityMapper.class);
+        service = new UserPersistenceService(userRepository, userEntityMapper);
+    }
+
+    @Test
+    void save_shouldMapDomainAndDelegateToRepository() {
+        User user = new User(null, "Bob", "Brown", "bob", "encoded");
+        UserEntity entity = new UserEntity();
+
+        when(userEntityMapper.mapToEntity(user)).thenReturn(entity);
+
+        service.save(user);
+
+        verify(userEntityMapper).mapToEntity(user);
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void findByUsername_shouldMapEntityToDomain() {
+        UserEntity entity = new UserEntity(1L, "Jane", "Doe", "jane", "pw");
+        User domain = new User(1L, "Jane", "Doe", "jane", "pw");
+
+        when(userRepository.findByUsername("jane")).thenReturn(Optional.of(entity));
+        when(userEntityMapper.mapFromEntity(entity)).thenReturn(domain);
+
+        Optional<User> result = service.findByUsername("jane");
+
+        assertThat(result).isPresent().contains(domain);
+    }
+}
