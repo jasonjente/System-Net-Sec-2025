@@ -2,6 +2,7 @@ package org.aueb.fair.dice.config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles validation errors for invalid password credentials in login requests.
+     *
+     * @param ex the validation exception thrown by Spring
+     * @return a 403 FORBIDDEN response with field-level error details
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid username or password");
+    }
     /**
      * Handles validation errors for @Valid annotated request bodies.
      *
