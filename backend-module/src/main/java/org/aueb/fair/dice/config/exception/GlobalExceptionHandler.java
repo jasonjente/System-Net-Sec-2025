@@ -1,4 +1,4 @@
-package org.aueb.fair.dice.config;
+package org.aueb.fair.dice.config.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -3,7 +3,7 @@ package org.aueb.fair.dice.application.service.user;
 import org.aueb.fair.dice.domain.user.LoginRequest;
 import org.aueb.fair.dice.domain.user.User;
 import org.aueb.fair.dice.port.secondary.user.UserPersistencePort;
-import org.aueb.fair.dice.security.JwtService;
+import org.aueb.fair.dice.security.jwt.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;

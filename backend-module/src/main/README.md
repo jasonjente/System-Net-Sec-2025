@@ -78,7 +78,7 @@ backend-module/
 │ │ │ ├── web/dto/
 │ │ │ │ ├── JwtResponse
 │ │ │ │ ├── LoginRequestDTO
-│ │ │ │ └── RegisterRequestDTO
+│ │ │ │ └── UserRegisterRequestDTO
 │ │ │ └── web/mapper/
 │ │ │ ├── LoginRequestDTOMapper
 │ │ │ └── UserRegistrationRequestDTOMapper
@@ -97,6 +97,10 @@ backend-module/
 1. Ensure PostgreSQL is running (or use `docker-compose`)
 2. Start the backend:
 
+```bash
+# add this for the integration testing
+echo "testcontainers.reuse.enable=true" >> ~/.testcontainers.properties
+```
 ```bash
 mvn clean compile
 mvn spring-boot:run

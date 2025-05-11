@@ -1,4 +1,4 @@
-package org.aueb.fair.dice.security;
+package org.aueb.fair.dice.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

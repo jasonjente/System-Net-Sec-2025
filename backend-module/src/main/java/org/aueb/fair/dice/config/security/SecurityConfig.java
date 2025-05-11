@@ -1,4 +1,4 @@
-package org.aueb.fair.dice.config;
+package org.aueb.fair.dice.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.aueb.fair.dice.application.CustomUserDetailsService;
@@ -38,8 +38,7 @@ public class SecurityConfig {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/error").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)

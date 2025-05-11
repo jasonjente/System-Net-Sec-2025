@@ -26,14 +26,14 @@ This checklist breaks down all implementation tasks based on the official assign
 
 > Secure communications using OpenSSL and HTTPS.
 
-- [ ] Generate self-signed **Certificate Authority (CA)**
-- [ ] Generate and sign **server SSL certificate** using the CA
-- [ ] Configure Spring Boot HTTPS:
-  - [ ] `server.ssl.key-store`
-  - [ ] `server.ssl.key-store-password`
-  - [ ] `server.ssl.key-alias`
-- [ ] Redirect all HTTP requests to HTTPS
-- [ ] Validate SSL certificate chain (e.g., via browser or curl)
+- [x] Generate self-signed **Certificate Authority (CA)**
+- [x] Generate and sign **server SSL certificate** using the CA
+- [x] Configure Spring Boot HTTPS:
+  - [x] `server.ssl.key-store`
+  - [x] `server.ssl.key-store-password`
+  - [x] `server.ssl.key-alias`
+- [x] Redirect all HTTP requests to HTTPS
+- [x] Validate SSL certificate chain (e.g., via browser or curl)
 
 ---
 
@@ -43,7 +43,7 @@ This checklist breaks down all implementation tasks based on the official assign
 
 ### ✅ Web Layer
 
-- [x] `RegisterRequestDTO`, `LoginRequestDTO`, `JwtResponse` DTOs
+- [x] `UserRegisterRequestDTO`, `LoginRequestDTO`, `JwtResponse` DTOs
 - [x] MapStruct mappers to domain (`User`, `LoginRequest`)
 
 ### ✅ Application Layer
@@ -89,7 +89,7 @@ This checklist breaks down all implementation tasks based on the official assign
 
 - [x] Use Spring Data JPA repositories only
 - [x] Avoid unsafe native queries
-- [ ] Validate and sanitize any dynamic inputs
+- [x] Validate and sanitize any dynamic inputs
 - [ ] Mention mitigation techniques in report
 
 ---

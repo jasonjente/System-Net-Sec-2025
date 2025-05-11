@@ -1,12 +1,12 @@
 package org.aueb.fair.dice.web.mapper;
 
 import org.aueb.fair.dice.domain.user.User;
-import org.aueb.fair.dice.web.dto.RegisterRequestDTO;
+import org.aueb.fair.dice.web.dto.UserRegisterRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * MapStruct mapper responsible for converting between {@link RegisterRequestDTO}
+ * MapStruct mapper responsible for converting between {@link UserRegisterRequestDTO}
  * and the domain-level {@link User} object.
  *
  * <p>
@@ -29,13 +29,13 @@ public interface UserRegistrationRequestDTOMapper {
      * @param dto the client-provided registration data
      * @return a {@link User} instance suitable for business logic and persistence
      */
-    User mapFromDTO(RegisterRequestDTO dto);
+    User mapFromDTO(UserRegisterRequestDTO dto);
 
     /**
      * Maps a domain-level User to a registration DTO.
      *
      * @param user the domain model
-     * @return a {@link RegisterRequestDTO} representation, for response or reuse
+     * @return a {@link UserRegisterRequestDTO} representation, for response or reuse
      */
-    RegisterRequestDTO mapToDTO(User user);
+    UserRegisterRequestDTO mapToDTO(User user);
 }

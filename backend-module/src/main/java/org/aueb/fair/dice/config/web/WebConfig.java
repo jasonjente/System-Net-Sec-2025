@@ -1,6 +1,7 @@
-package org.aueb.fair.dice.config;
+package org.aueb.fair.dice.config.web;
 
 import lombok.RequiredArgsConstructor;
+import org.aueb.fair.dice.config.audit.AuditLoggingInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 

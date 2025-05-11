@@ -5,9 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aueb.fair.dice.port.primary.user.UserCommandPort;
 import org.aueb.fair.dice.port.primary.user.UserQueryPort;
+import org.aueb.fair.dice.security.sanitization.InputSanitizer;
 import org.aueb.fair.dice.web.dto.JwtResponse;
 import org.aueb.fair.dice.web.dto.LoginRequestDTO;
-import org.aueb.fair.dice.web.dto.RegisterRequestDTO;
+import org.aueb.fair.dice.web.dto.UserRegisterRequestDTO;
 import org.aueb.fair.dice.web.mapper.LoginRequestDTOMapper;
 import org.aueb.fair.dice.web.mapper.UserRegistrationRequestDTOMapper;
 import org.aueb.fair.dice.application.service.user.UserCommandService;
@@ -45,15 +46,16 @@ public class AuthenticationController {
 
     /**
      * Handles the registration of a new user. Converts the incoming
-     * {@link RegisterRequestDTO} to a domain-level {@link org.aueb.fair.dice.domain.user.User}
+     * {@link UserRegisterRequestDTO} to a domain-level {@link org.aueb.fair.dice.domain.user.User}
      * and delegates the save operation to the {@link UserCommandService}.
      *
      * @param request the validated registration request body
      * @return HTTP 200 OK if registration was successful
      */
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequestDTO request) {
-        var mappedReq = this.userRegistrationRequestDTOMapper.mapFromDTO(request);
+    public ResponseEntity<Void> register(final @Valid @RequestBody UserRegisterRequestDTO request) {
+        var sanitizedRequest = InputSanitizer.sanitize(request);
+        var mappedReq = this.userRegistrationRequestDTOMapper.mapFromDTO(sanitizedRequest);
         userCommandPort.register(mappedReq);
         return ResponseEntity.ok().build();
     }
@@ -66,8 +68,9 @@ public class AuthenticationController {
      * @return HTTP 200 OK with a JWT token in the response body
      */
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequestDTO request) {
-        var token = userQueryPort.login(loginRequestDTOMapper.mapFromDTO(request));
+    public ResponseEntity<JwtResponse> login(final @Valid @RequestBody LoginRequestDTO request) {
+        var sanitizedRequest = InputSanitizer.sanitize(request);
+        var token = userQueryPort.login(loginRequestDTOMapper.mapFromDTO(sanitizedRequest));
         return ResponseEntity.ok(new JwtResponse(token));
     }
 }

@@ -1,4 +1,4 @@
-package org.aueb.fair.dice.config;
+package org.aueb.fair.dice.config.audit;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

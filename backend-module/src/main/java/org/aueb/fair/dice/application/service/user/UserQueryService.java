@@ -5,7 +5,7 @@ import org.aueb.fair.dice.domain.user.LoginRequest;
 import org.aueb.fair.dice.domain.user.User;
 import org.aueb.fair.dice.port.primary.user.UserQueryPort;
 import org.aueb.fair.dice.port.secondary.user.UserPersistencePort;
-import org.aueb.fair.dice.security.JwtService;
+import org.aueb.fair.dice.security.jwt.JwtService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
