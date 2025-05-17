@@ -1,0 +1,7 @@
+org\aueb\fair\dice\integration\password\PasswordValidationIntegrationTests.class
+org\aueb\fair\dice\integration\database\container\SharedPostgresContainer.class
+org\aueb\fair\dice\application\service\user\UserQueryServiceTest.class
+org\aueb\fair\dice\application\service\user\UserCommandServiceTest.class
+org\aueb\fair\dice\integration\authentication\AuthenticationControllerTests.class
+org\aueb\fair\dice\integration\BaseIntegrationTests.class
+org\aueb\fair\dice\secondary\persistence\service\UserPersistenceServiceTest.class

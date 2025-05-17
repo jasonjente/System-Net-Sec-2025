@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: dev # or prod
+
+server:
+  port: 8443
+  http:
+    port: 8080
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+
+jwt:
+  secret: NVELselcZPgZBlq26cuspTYyQkh82kG8WAzdQYtDqA8=

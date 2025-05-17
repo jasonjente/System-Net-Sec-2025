@@ -1,0 +1,50 @@
+server:
+  ssl:
+    enabled: false
+  port: 0
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gdpr
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 2
+      connection-timeout: 10000
+      max-lifetime: 5000
+      minimum-idle: 1
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:import.sql
+
+  jackson:
+    serialization:
+      indent_output: true
+
+  thymeleaf:
+    enabled: false
+
+logging:
+  level:
+    root: WARN
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: INFO
+
+jwt:
+  secret: NVELselcZPgZBlq26cuspTYyQkh82kG8WAzdQYtDqA8=
