@@ -18,7 +18,7 @@ function Login() {
             if (response.ok) {
                 const data = await response.json();
                 setMessage('Login successful!');
-                // You can store token or redirect user here
+                // You can store token or redirect user here //TODO
             } else {
                 setMessage('Login failed. Check your credentials.');
             }
