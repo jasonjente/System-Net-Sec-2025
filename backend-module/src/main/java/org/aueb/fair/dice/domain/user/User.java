@@ -40,4 +40,9 @@ public class User {
      * Handled via password encoding logic in the application layer.
      */
     private String password;
+
+    /**
+     * The user email address.
+     */
+    private String email;
 }

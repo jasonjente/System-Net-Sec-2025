@@ -1,11 +1,11 @@
 package org.aueb.fair.dice.integration.authentication;
 
 
-import org.aueb.fair.dice.adapter.primary.web.controller.AuthenticationController;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.controller.AuthenticationController;
 import org.aueb.fair.dice.integration.BaseIntegrationTests;
-import org.aueb.fair.dice.web.dto.JwtResponse;
-import org.aueb.fair.dice.web.dto.LoginRequestDTO;
-import org.aueb.fair.dice.web.dto.UserRegisterRequestDTO;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.JwtResponse;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.LoginRequestDTO;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.UserRegisterRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,11 +19,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AuthenticationControllerTests extends BaseIntegrationTests {
 
     private static final String SECURE_PASSWORD = "S3cureP@ss!";
+    public static final String TEST_MAIL = "test@email.com";
 
     @Test
     void register_thenLogin_shouldReturnJwtToken() {
         // Register new user
-        var registerDto = new UserRegisterRequestDTO("Test", "User", "testuser", "S3cureP@ss!");
+        var registerDto = new UserRegisterRequestDTO("Test", "User", "testuser", SECURE_PASSWORD, "test@email.com");
         var registerResponse = restTemplate.postForEntity(
                 getBaseUrl("/api/auth/register"), registerDto, Void.class);
 
@@ -42,7 +43,7 @@ class AuthenticationControllerTests extends BaseIntegrationTests {
     @Test
     void login_withInvalidPassword_shouldReturnForbidden() {
         // Register valid user
-        var dto = new UserRegisterRequestDTO("Bad", "Login", "wrongpass", SECURE_PASSWORD);
+        var dto = new UserRegisterRequestDTO("Bad", "Login", "wrongpass", SECURE_PASSWORD, TEST_MAIL);
         restTemplate.postForEntity(getBaseUrl("/api/auth/register"), dto, Void.class);
 
         // Try invalid login

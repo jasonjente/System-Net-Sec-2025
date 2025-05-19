@@ -1,7 +1,7 @@
 package org.aueb.fair.dice.integration.password;
 
 import org.aueb.fair.dice.integration.BaseIntegrationTests;
-import org.aueb.fair.dice.web.dto.UserRegisterRequestDTO;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.UserRegisterRequestDTO;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.*;
@@ -33,7 +33,8 @@ class PasswordValidationIntegrationTests extends BaseIntegrationTests {
                 "Test",
                 "User",
                 "testuser" + password.hashCode(),
-                password
+                password,
+                "test@email.com"
         );
 
         HttpHeaders headers = new HttpHeaders();

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONTAINER_NAME="fair-dice-game"
-DOCKERFILE_PATH="../../secure-game-backend/src/docker/Dockerfile"
+DOCKERFILE_PATH="../secure-game-backend/docker/Dockerfile"
 # Used for volumes to persist the logs on disc instead of on the container.
 LOCAL_LOG_DIR="/opt/fair-dice-game/logs"
 DOCKER_LOG_DIR="/app/logs"

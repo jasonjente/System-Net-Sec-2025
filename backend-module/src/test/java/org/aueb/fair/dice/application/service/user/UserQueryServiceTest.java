@@ -2,8 +2,8 @@ package org.aueb.fair.dice.application.service.user;
 
 import org.aueb.fair.dice.domain.user.LoginRequest;
 import org.aueb.fair.dice.domain.user.User;
-import org.aueb.fair.dice.port.secondary.user.UserPersistencePort;
-import org.aueb.fair.dice.security.jwt.JwtService;
+import org.aueb.fair.dice.application.port.secondary.user.UserPersistencePort;
+import org.aueb.fair.dice.configuration.security.jwt.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -55,7 +55,7 @@ class UserQueryServiceTest {
      */
     @Test
     void findByUsername_shouldReturnUserFromPort() {
-        User user = new User(1L, "Alice", "Smith", "alice", "encoded");
+        User user = new User(1L, "Alice", "Smith", "alice", "encoded", "alice@AliceSmith.com");
         when(userPersistencePort.findByUsername("alice")).thenReturn(Optional.of(user));
 
         Optional<User> result = service.findByUsername("alice");
@@ -70,7 +70,7 @@ class UserQueryServiceTest {
      */
     @Test
     void login_shouldReturnToken_whenCredentialsAreValid() {
-        User user = new User(1L, "Alice", "Smith", "alice", "encoded");
+        User user = new User(1L, "Alice", "Smith", "alice", "encoded", "alice@AliceSmith.com");
         LoginRequest request = new LoginRequest("alice", "rawpass");
 
         when(userPersistencePort.findByUsername("alice")).thenReturn(Optional.of(user));
@@ -104,7 +104,7 @@ class UserQueryServiceTest {
      */
     @Test
     void login_shouldThrowException_whenPasswordDoesNotMatch() {
-        User user = new User(1L, "Alice", "Smith", "alice", "encoded");
+        User user = new User(1L, "Alice", "Smith", "alice", "encoded", "alice@AliceSmith.com");
         LoginRequest request = new LoginRequest("alice", "wrong");
 
         when(userPersistencePort.findByUsername("alice")).thenReturn(Optional.of(user));

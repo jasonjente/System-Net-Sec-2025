@@ -1,9 +1,9 @@
 package org.aueb.fair.dice.secondary.persistence.service;
 
-import org.aueb.fair.dice.adapter.secondary.persistence.entity.UserEntity;
-import org.aueb.fair.dice.adapter.secondary.persistence.mapper.UserEntityMapper;
-import org.aueb.fair.dice.adapter.secondary.persistence.repository.UserRepository;
-import org.aueb.fair.dice.adapter.secondary.persistence.service.UserPersistenceService;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity.UserEntity;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.mapper.UserEntityMapper;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.repository.UserRepository;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.service.UserPersistenceService;
 import org.aueb.fair.dice.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class UserPersistenceServiceTest {
 
     @Test
     void save_shouldMapDomainAndDelegateToRepository() {
-        User user = new User(null, "Bob", "Brown", "bob", "encoded");
+        User user = new User(null, "Bob", "Brown", "bob", "encoded", "test@email.com");
         UserEntity entity = new UserEntity();
 
         when(userEntityMapper.mapToEntity(user)).thenReturn(entity);
@@ -42,7 +42,7 @@ class UserPersistenceServiceTest {
     @Test
     void findByUsername_shouldMapEntityToDomain() {
         UserEntity entity = new UserEntity(1L, "Jane", "Doe", "jane", "pw");
-        User domain = new User(1L, "Jane", "Doe", "jane", "pw");
+        User domain = new User(1L, "Jane", "Doe", "jane", "pw", "test@email.com");
 
         when(userRepository.findByUsername("jane")).thenReturn(Optional.of(entity));
         when(userEntityMapper.mapFromEntity(entity)).thenReturn(domain);

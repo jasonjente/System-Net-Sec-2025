@@ -162,6 +162,18 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.4.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Annotation Processor (for MapStruct + Lombok) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
