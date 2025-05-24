@@ -1,7 +1,7 @@
-package org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.service;
+package org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.mapper.UserEntityMapper;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.mapper.user.UserEntityMapper;
 import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.repository.UserRepository;
 import org.aueb.fair.dice.domain.user.User;
 import org.aueb.fair.dice.application.port.secondary.user.UserPersistencePort;

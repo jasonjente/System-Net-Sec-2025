@@ -1,6 +1,6 @@
 package org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.repository;
 
-import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity.UserEntity;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

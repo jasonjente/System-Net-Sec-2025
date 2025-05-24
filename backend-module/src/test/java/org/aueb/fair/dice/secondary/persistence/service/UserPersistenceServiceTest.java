@@ -1,9 +1,9 @@
 package org.aueb.fair.dice.secondary.persistence.service;
 
-import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity.UserEntity;
-import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.mapper.UserEntityMapper;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity.user.UserEntity;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.mapper.user.UserEntityMapper;
 import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.repository.UserRepository;
-import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.service.UserPersistenceService;
+import org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.service.user.UserPersistenceService;
 import org.aueb.fair.dice.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
