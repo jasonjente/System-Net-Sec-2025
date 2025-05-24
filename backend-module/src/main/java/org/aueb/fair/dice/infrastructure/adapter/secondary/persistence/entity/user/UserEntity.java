@@ -1,4 +1,4 @@
-package org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity;
+package org.aueb.fair.dice.infrastructure.adapter.secondary.persistence.entity.user;
 
 import jakarta.persistence.*;
 import lombok.*;

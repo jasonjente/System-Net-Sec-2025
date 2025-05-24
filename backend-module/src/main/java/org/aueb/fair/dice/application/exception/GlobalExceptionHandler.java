@@ -50,6 +50,21 @@ public class GlobalExceptionHandler {
      * Handles uncaught generic exceptions.
      *
      * @param ex the exception that was thrown
+     * @return a 404 Not found with basic info
+     */
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleEntityNotFoundException(EntityNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", Instant.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Resource not found.");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+    /**
+     * Handles uncaught generic exceptions.
+     *
+     * @param ex the exception that was thrown
      * @return a 500 INTERNAL SERVER ERROR with basic info
      */
     @ExceptionHandler(Exception.class)
