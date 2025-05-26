@@ -17,6 +17,9 @@ function Login() {
 
             if (response.ok) {
                 const data = await response.json();
+                const token = data.token;
+                localStorage.setItem('jwtToken', token);
+
                 setMessage('Login successful!');
                 // You can store token or redirect user here //TODO
             } else {
