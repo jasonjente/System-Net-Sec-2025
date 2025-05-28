@@ -92,4 +92,25 @@ public class JwtService {
             return false;
         }
     }
+
+    /**
+     * Extracts the username (subject) from the JWT token.
+     *
+     * @param token the JWT token string
+     * @return the username embedded in the token, or null if parsing fails
+     */
+    public String extractUsername(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+
 }
