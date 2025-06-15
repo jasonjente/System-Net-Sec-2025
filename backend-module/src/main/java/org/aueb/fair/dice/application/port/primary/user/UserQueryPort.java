@@ -21,6 +21,14 @@ public interface UserQueryPort {
     Optional<User> findByUsername(String username);
 
     /**
+     * Finds a user by their unique id.
+     *
+     * @param id the id to search for
+     * @return an Optional containing the User if found, or empty otherwise
+     */
+    Optional<User> findById(Long id);
+
+    /**
      * Performs the login request for a set of username and password values.
      *
      * @param loginRequest the login request.

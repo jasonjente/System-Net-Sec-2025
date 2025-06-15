@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: fair-dice-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gdpr
+    volumes:
+      - .database/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fair-dice-backend
+    ports:
+      - "8443:8443"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gdpr
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+
+  frontend:
+    build:
+      context: ../frontend-module/
+      dockerfile: Dockerfile
+    container_name: fair-dice-frontend
+    ports:
+      - "3000:443"
+    depends_on:
+      - backend

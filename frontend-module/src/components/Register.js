@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
-function Register({ onChangePage }) {
+function Register() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/auth/register', {  // backend endpoint
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -19,11 +23,13 @@ function Register({ onChangePage }) {
                     lastName,
                     username,
                     password,
+                    email,
                 }),
             });
 
             if (response.ok) {
-                setMessage('Registration successful!');
+                setMessage('Registration successful! Redirecting to login...');
+                setTimeout(() => navigate('/login'), 1500);
             } else {
                 const data = await response.json();
                 setMessage(data.details || 'Registration failed.');
@@ -34,7 +40,7 @@ function Register({ onChangePage }) {
     };
 
     return (
-        <div style={{ maxWidth: '300px', margin: 'auto' }}>
+        <div style={{ maxWidth: '300px', margin: 'auto', textAlign: 'center' }}>
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -73,13 +79,22 @@ function Register({ onChangePage }) {
                         required
                     />
                 </div>
-                <button type="submit">Register</button>
+                <div>
+                    <label>Email:</label><br />
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" style={{ marginTop: 10 }}>Register</button>
             </form>
             <p>{message}</p>
 
-            <button onClick={() => onChangePage('home')} style={{ marginTop: 20 }}>
+            <Link to="/" style={{ display: 'inline-block', marginTop: 20 }}>
                 Back to Home
-            </button>
+            </Link>
         </div>
     );
 }

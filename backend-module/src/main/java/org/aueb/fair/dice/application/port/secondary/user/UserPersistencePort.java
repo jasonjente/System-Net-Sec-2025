@@ -25,4 +25,12 @@ public interface UserPersistencePort {
      * @return an Optional containing the user if found
      */
     Optional<User> findByUsername(String username);
+
+    /**
+     * Fetches a user by id.
+     *
+     * @param id the user unique identifier.
+     * @return an optional of the user.
+     */
+    Optional<User> findById(Long id);
 }

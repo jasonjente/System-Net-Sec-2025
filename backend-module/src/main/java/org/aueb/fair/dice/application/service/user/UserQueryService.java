@@ -1,11 +1,11 @@
 package org.aueb.fair.dice.application.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.aueb.fair.dice.domain.user.LoginRequest;
-import org.aueb.fair.dice.domain.user.User;
 import org.aueb.fair.dice.application.port.primary.user.UserQueryPort;
 import org.aueb.fair.dice.application.port.secondary.user.UserPersistencePort;
 import org.aueb.fair.dice.configuration.security.jwt.JwtService;
+import org.aueb.fair.dice.domain.user.LoginRequest;
+import org.aueb.fair.dice.domain.user.User;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +33,17 @@ public class UserQueryService implements UserQueryPort {
     @Override
     public Optional<User> findByUsername(final String username) {
         return userPersistencePort.findByUsername(username);
+    }
+
+    /**
+     * Finds a user by their unique id.
+     *
+     * @param id the id to search for
+     * @return an Optional containing the User if found, or empty otherwise
+     */
+    @Override
+    public Optional<User> findById(final Long id) {
+        return userPersistencePort.findById(id);
     }
 
     /**

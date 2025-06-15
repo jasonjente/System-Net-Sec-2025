@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,6 +24,8 @@ function Login() {
 
                 setMessage('Login successful!');
                 // You can store token or redirect user here //TODO
+                // Redirect to home
+                navigate('/');
             } else {
                 setMessage('Login failed. Check your credentials.');
             }
@@ -31,30 +35,35 @@ function Login() {
     };
 
     return (
-        <div>
+        <div style={{ textAlign: 'center', marginTop: 50 }}>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </label><br />
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </label><br />
-                <button type="submit">Login</button>
+                <div>
+                    <label>
+                        Username:
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Password:
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </label>
+                </div>
+                <button type="submit" style={{ marginTop: 10 }}>Login</button>
             </form>
             <p>{message}</p>
+            <Link to="/">Back to Home</Link>
         </div>
     );
 }

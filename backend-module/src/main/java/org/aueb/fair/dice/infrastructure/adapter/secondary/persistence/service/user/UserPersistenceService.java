@@ -42,4 +42,15 @@ public class UserPersistenceService implements UserPersistencePort {
         return userRepository.findByUsername(username)
                 .map(userEntityMapper::mapFromEntity);
     }
+
+    /**
+     * Fetches a user by id.
+     *
+     * @param id the user unique identifier.
+     * @return an optional of the user.
+     */
+    @Override
+    public Optional<User> findById(final Long id) {
+        return this.userRepository.findById(id).map(this.userEntityMapper::mapFromEntity);
+    }
 }

@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 
 function App() {
-    const [page, setPage] = useState('home'); // 'home', 'login', or 'register'
-
-    const renderPage = () => {
-        if (page === 'login') return <Login onChangePage={setPage} />;
-        if (page === 'register') return <Register onChangePage={setPage} />;
-        return <Home onChangePage={setPage} />;
-    };
-
-    return <div className="App">{renderPage()}</div>;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
