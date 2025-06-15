@@ -23,9 +23,7 @@ function Login() {
                 localStorage.setItem('jwtToken', token);
 
                 setMessage('Login successful!');
-                // You can store token or redirect user here //TODO
-                // Redirect to home
-                navigate('/');
+                navigate('/digital-dice-game');
             } else {
                 setMessage('Login failed. Check your credentials.');
             }
