@@ -2,7 +2,7 @@ package org.aueb.fair.dice.configuration.security.sanitization;
 
 import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.LoginRequestDTO;
 import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.UserRegisterRequestDTO;
-import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.session.SessionDTO;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.game.GameResultDTO;
 
 public class InputSanitizer {
 
@@ -24,7 +24,7 @@ public class InputSanitizer {
         return dto;
     }
 
-    public static SessionDTO sanitize(final SessionDTO dto) {
+    public static GameResultDTO sanitize(final GameResultDTO dto) {
 
         return dto;
     }

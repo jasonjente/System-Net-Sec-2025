@@ -36,7 +36,7 @@ Controllers ⇄ Services ⇄ Ports ⇄ Adapters
   Stateless JWT-based authentication via `JwtService`.
 
 - **Configuration Layer**
-    - `SecurityConfig`: Disables session auth, enables JWT setup
+    - `SecurityConfig`: Disables gameResult auth, enables JWT setup
     - `WebConfig`: Registers interceptors
     - `AuditLoggingInterceptor`: Logs every API call
     - `GlobalExceptionHandler`: Formats validation and generic errors
