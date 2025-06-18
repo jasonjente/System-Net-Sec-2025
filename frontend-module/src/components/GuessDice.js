@@ -32,7 +32,7 @@ function GuessDice() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // Attach the JWT token for authentication
+                    'Authorization': `Bearer ${token}`,
                 },
             });
 
