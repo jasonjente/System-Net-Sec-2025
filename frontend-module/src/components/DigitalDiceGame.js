@@ -34,6 +34,7 @@ function DigitalDiceGame() {
 
             if (response.ok) {
                 const hashResult = await response.text();
+                localStorage.setItem('gameHash', hashResult);  // Store the hash in localStorage
                 setMessage(`Game started! Hash result: ${hashResult}`);
                 console.log('Game started:', hashResult);
 
@@ -71,6 +72,11 @@ function DigitalDiceGame() {
             </button>
 
             {message && <p>{message}</p>}
+
+            {/* Display the stored hash from localStorage */}
+            {localStorage.getItem('gameHash') && (
+                <p>Stored Hash: {localStorage.getItem('gameHash')}</p>
+            )}
         </div>
     );
 }
