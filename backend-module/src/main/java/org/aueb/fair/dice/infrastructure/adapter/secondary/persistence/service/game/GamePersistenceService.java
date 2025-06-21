@@ -59,7 +59,7 @@ public class GamePersistenceService implements GamePersistencePort {
      */
     @Override
     public List<GameResult> getGameResultsByUserId(final Long userId) {
-        return this.gameResultRepository.findByUser_IdAndWinFalse(userId).stream()
+        return this.gameResultRepository.findByUser_Id(userId).stream()
                 .map(this.gameResultEntityMapper::mapFromEntity)
                 .toList();
     }

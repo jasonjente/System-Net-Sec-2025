@@ -1,10 +1,11 @@
 package org.aueb.fair.dice.application.service.game;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aueb.fair.dice.application.exception.user.UserAlreadyInGameException;
 import org.aueb.fair.dice.application.exception.user.UserNotFoundException;
+import org.aueb.fair.dice.application.port.primary.game.GamePort;
 import org.aueb.fair.dice.application.port.primary.user.UserQueryPort;
-import org.aueb.fair.dice.application.port.secondary.security.HashingPort;
 import org.aueb.fair.dice.application.port.secondary.game.GamePersistencePort;
 import org.aueb.fair.dice.domain.game.GameResult;
 import org.aueb.fair.dice.domain.user.User;
@@ -12,28 +13,107 @@ import org.aueb.fair.dice.infrastructure.adapter.secondary.dice.RandomResourceGe
 import org.aueb.fair.dice.infrastructure.adapter.secondary.security.SHA256HashingService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
 
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class GameService {
+public class GameService implements GamePort {
 
+    /**
+     * Bean instance of the port responsible for interacting with game data.
+     */
     private final GamePersistencePort gamePersistencePort;
+
+    /**
+     * Bean instance of the port responsible for interacting with user data.
+     */
     private final UserQueryPort userQueryPort;
 
+    /**
+     * Initializes a game by retrieving a random client string that can will be used for the hash verification.
+     *
+     * @param randomClientString the random client string
+     * @param userId             the user id extracted from the jwt token
+     * @return the concatenated string of: (server_guess|random_client_string|random_server_string).
+     */
+    @Override
     public String startGame(final String randomClientString, final Long userId) {
         var user = userQueryPort.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User couldn't be retrieved."));
-        this.verifyIfUserHasIncompleteGameInProgress(user);
+        var unfinishedGames = this.gamePersistencePort.getGameResultsByUserId(user.getId());
 
-        var gameResult = buildGameResult(randomClientString, user);
+        if (!unfinishedGames.isEmpty()) {
+            sortByDateDescAndKeepTheLatest(unfinishedGames, randomClientString, user);
+        }
+
+        var gameResult =
+                unfinishedGames.isEmpty() ? buildGameResult(randomClientString, user) : unfinishedGames.getFirst();
 
         var persistedResult = this.gamePersistencePort.create(gameResult);
         var hashingPort = new SHA256HashingService();
-        return hashingPort.hashConcatenation(String.valueOf(persistedResult.getServerGuess()),
+        var hash = hashingPort.hashConcatenation(String.valueOf(persistedResult.getServerGuess()),
                 persistedResult.getRandomClientString(), persistedResult.getRandomServerString());
+
+        log.info("Returning new hash to the user.");
+        return hash;
     }
 
-    private static GameResult buildGameResult(String randomClientString, User user) {
+    /**
+     * Retrieves the client guess and validates it against the value in the database. It will then delete the game
+     * result from the database.
+     *
+     * @param clientGuess the client guess of the dice result.
+     * @param userId      the user id extracted from the jwt token
+     * @return the game result containing the server guess and the server random string.
+     */
+    @Override
+    public GameResult loadClientGuess(final Integer clientGuess, final Long userId) {
+        log.info("Loading client guess.");
+        var unfinishedGames = this.gamePersistencePort.getGameResultsByUserId(userId);
+        if (unfinishedGames.isEmpty()) {
+            log.warn("Client tried to guess without starting a game.");
+            throw new UserAlreadyInGameException("No game has been created.");
+        } else if (unfinishedGames.size() > 1) {
+            sortByDateDescAndKeepTheLatest(unfinishedGames);
+        }
+        var gameResult = unfinishedGames.getFirst(); // Business Logic prevents more than one active games at once for a user id.
+        var clientHash = extractHashedGuess(clientGuess, gameResult);
+        var serverHash = extractHashedGuess(gameResult.getServerGuess(), gameResult);
+
+        var clientWins = clientHash.equals(serverHash);
+        gameResult.setWin(clientWins);
+        gameResult.setEnded(true);
+        this.gamePersistencePort.delete(gameResult.getId());
+        return gameResult;
+    }
+
+    private void sortByDateDescAndKeepTheLatest(final List<GameResult> unfinishedGames,
+                                                final String randomClientString, final User user) {
+        if (unfinishedGames.size() > 1) {
+            unfinishedGames.sort(Comparator.comparing(GameResult::getTimestamp).reversed());
+            unfinishedGames.forEach(gameResult -> this.gamePersistencePort.delete(gameResult.getId()));
+        }
+
+        var latest = unfinishedGames.getFirst();
+        var newGameResult = buildGameResult(randomClientString, user);
+        latest.setRandomClientString(randomClientString);
+        latest.setRandomServerString(newGameResult.getRandomServerString());
+        latest.setServerGuess(newGameResult.getServerGuess());
+        latest.setTimestamp(newGameResult.getTimestamp());
+    }
+
+    private void sortByDateDescAndKeepTheLatest(final List<GameResult> unfinishedGames) {
+        unfinishedGames.sort(Comparator.comparing(GameResult::getTimestamp).reversed());
+        unfinishedGames.stream()
+                .skip(1)
+                .forEach(gameResult -> this.gamePersistencePort.delete(gameResult.getId()));
+    }
+
+    private GameResult buildGameResult(final String randomClientString, final User user) {
         RandomResourceGeneratorService randomNumberGeneratorService = new RandomResourceGeneratorService();
         Integer serverGuess = randomNumberGeneratorService.nextInt(7); // the outer bound is exclusive [0, 6]
         String randomServerString = randomNumberGeneratorService.nextString();
@@ -43,39 +123,13 @@ public class GameService {
                 .randomServerString(randomServerString)
                 .randomClientString(randomClientString)
                 .user(user)
+                .timestamp(Instant.now().toEpochMilli())
                 .build();
     }
 
-    private void verifyIfUserHasIncompleteGameInProgress(final User user) {
-        var unfinishedGames = this.gamePersistencePort.getGameResultsByUserId(user.getId());
-
-        if (!unfinishedGames.isEmpty()) {
-            throw new UserAlreadyInGameException("User has some unfinished business.. " +
-                    "Found " + unfinishedGames.size() + " games that were not finished");
-        }
-
-    }
-
-    public GameResult loadClientGuess(final Integer clientGuess, final Long userId) {
-        var unfinishedGames = this.gamePersistencePort.getGameResultsByUserId(userId);
-        if (unfinishedGames.isEmpty()) {
-            throw new UserAlreadyInGameException("No game has been created");
-        }
-        var gameResult = unfinishedGames.getFirst(); // Business Logic prevents more than one active games at once for a user id.
-        var hashingPort = new SHA256HashingService();
-        var clientHash = extractHashedGuess(clientGuess, hashingPort, gameResult);
-        var serverHash = extractHashedGuess(gameResult.getServerGuess(), hashingPort, gameResult);
-
-        var clientWins = clientHash.equals(serverHash);
-        gameResult.setWin(clientWins);
-        gameResult.setEnded(true);
-        this.gamePersistencePort.update(gameResult);
-        return gameResult;
-    }
-
     private String extractHashedGuess(final Integer guessedNumber,
-                                           final HashingPort hashingPort,
-                                           final GameResult gameResult) {
+                                      final GameResult gameResult) {
+        var hashingPort = new SHA256HashingService();
         return hashingPort.hashConcatenation(String.valueOf(guessedNumber),
                 gameResult.getRandomClientString(), gameResult.getRandomServerString());
     }

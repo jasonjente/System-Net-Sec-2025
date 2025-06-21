@@ -13,11 +13,12 @@ services:
 
   backend:
     build:
-      context: .
+      context: ../backend-module/
       dockerfile: Dockerfile
     container_name: fair-dice-backend
     ports:
       - "8443:8443"
+      - "5005:5005"
     depends_on:
       - postgres
     environment:

@@ -11,7 +11,7 @@ public interface GameResultRepository extends JpaRepository<GameResultEntity, Lo
      * Fetch all non-winning game results for a given user ID.
      *
      * @param userId the ID of the user
-     * @return list of game results where win = false
+     * @return list of game results for the given user.
      */
-    List<GameResultEntity> findByUser_IdAndWinFalse(Long userId);
+    List<GameResultEntity> findByUser_Id(Long userId);
 }

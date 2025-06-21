@@ -32,6 +32,11 @@ public class GameResult {
     private String randomServerString;
 
     /**
+     * Timestamp of the game creation datetime.
+     */
+    private Long timestamp;
+
+    /**
      * Indicates whether the user has been declared the winner in the game.
      */
     private boolean win;

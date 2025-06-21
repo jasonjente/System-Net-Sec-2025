@@ -47,6 +47,12 @@ public class GameResultEntity {
     private String randomServerString;
 
     /**
+     * Timestamp of the game creation datetime.
+     */
+    @Column(name = "GAME_TIME_START")
+    private Long timestamp;
+
+    /**
      * Indicates whether the user has been declared the winner in the game.
      */
     @Column(name = "WIN")

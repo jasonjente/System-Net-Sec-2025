@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-./build_backend.sh
+
 # Show usage instructions
 usage() {
   echo "Usage: $0 [all|backend|frontend|postgres]"
@@ -13,7 +13,7 @@ usage() {
 
 # If no argument provided, default to 'all' after showing usage
 SERVICE="${1:-all}"
-[ -z "$1" ] && usage && echo && echo "🟢 No argument given, defaulting to: all"
+[ -z "$1" ] && usage && echo && echo "No argument given, defaulting to: all"
 
 # Start services in detached mode (-d), ignore if already running
 case "$SERVICE" in

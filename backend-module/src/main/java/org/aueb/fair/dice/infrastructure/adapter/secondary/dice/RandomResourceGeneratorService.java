@@ -31,7 +31,9 @@ public class RandomResourceGeneratorService implements RandomResourceGeneratorPo
      */
     @Override
     public int nextInt(int bound) {
-        return rng.nextInt(bound);
+        // origin is inclusive
+        // bound is exclusive [origin, bound)
+        return rng.nextInt(1, bound);
     }
 
     /**

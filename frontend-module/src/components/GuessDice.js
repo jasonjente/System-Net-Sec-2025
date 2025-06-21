@@ -10,6 +10,7 @@ function GuessDice() {
     const [clientHash, setClientHash] = useState('');
     const [serverHash, setServerHash] = useState('');
     const [storedHash, setStoredHash] = useState('');
+    const [showDetails, setShowDetails] = useState(false);
 
     // Handle the guess form submission
     const handleGuessSubmit = async (e) => {
@@ -69,7 +70,7 @@ function GuessDice() {
                     setMessage('Result not accepted: Not fair.');
                 }
             } else {
-                setMessage('Failed to submit your guess. Please try again.');
+                setMessage('Last game was finished, please press play again.');
             }
         } catch (error) {
             setMessage('Error connecting to the server.');
@@ -101,7 +102,7 @@ function GuessDice() {
     };
 
     // Play Again button handler
-    const handlePlayAgain = () => {
+    const handlePlayAgain = async () => {
         setGuess('');
         setMessage('');
         setGameResult(null);
@@ -109,7 +110,39 @@ function GuessDice() {
         setClientHash('');
         setServerHash('');
         setStoredHash('');
+
+        try {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                setMessage('Please log in again.');
+                return;
+            }
+
+            // Generate new random client string (32-char hex)
+            const newClientRandomString = crypto.getRandomValues(new Uint8Array(16))
+                .reduce((acc, byte) => acc + byte.toString(16).padStart(2, '0'), '');
+
+            // Call startGame with the new client string
+            const response = await fetch(`/api/game/${newClientRandomString}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const hash = await response.text();
+                localStorage.setItem('gameHash', hash);
+                setMessage('New game started. Make your guess!');
+            } else {
+                setMessage('Failed to start a new game.');
+            }
+        } catch (error) {
+            setMessage('Error starting new game.');
+            console.error(error);
+        }
     };
+
 
     return (
         <div style={{ textAlign: 'center', marginTop: 50 }}>
@@ -139,19 +172,36 @@ function GuessDice() {
                 <div>
                     <h3>Game Result</h3>
                     <p>Server Guess: {gameResult.serverGuess}</p>
-                    <p>Client Random String: {gameResult.randomClientString}</p>
-                    <p>Server Random String: {gameResult.randomServerString}</p>
-                    <p>Win: {gameResult.win ? 'Yes' : 'No'}</p>
+                    <p style={{ color: gameResult.win ? 'green' : 'red' }}>
+                      Win: {gameResult.win ? 'Yes' : 'No'}
+                    </p>
                 </div>
             )}
 
-            {/* Display the calculated and server's hash */}
-            <div style={{ marginTop: 20 }}>
-                <h4>Hashes Comparison</h4>
-                <p><strong>Client Calculated Hash:</strong> {clientHash}</p>
-                <p><strong>Server Hash:</strong> {serverHash}</p>
-                <p><strong>Stored Hash (from DigitalDiceGame):</strong> {storedHash}</p>
-            </div>
+            {/* Expandable hash details */}
+            {(clientHash || serverHash || storedHash) && (
+                <div style={{ marginTop: 20 }}>
+                    <button onClick={() => setShowDetails(prev => !prev)}>
+                        {showDetails ? 'Hide Details' : 'Show Details'}
+                    </button>
+                    {showDetails && (
+                        <div>
+                            <section>
+                                <h4>Client&Server random strings:</h4>
+                                <p>Client Random String: {gameResult.randomClientString}</p>
+                                <p>Server Random String: {gameResult.randomServerString}</p>
+                            </section>
+                            <section>
+                                <h4>Hashes Comparison</h4>
+                                <p><strong>Client Calculated Hash:</strong> {clientHash}</p>
+                                <p><strong>Server Hash:</strong> {serverHash}</p>
+                                <p><strong>Stored Hash (from DigitalDiceGame):</strong> {storedHash}</p>
+                            </section>
+                        </div>
+                    )}
+                </div>
+            )}
+
 
             {/* Log off button */}
             <button onClick={handleLogOff} style={{ marginTop: 20 }}>
