@@ -32,6 +32,6 @@ services:
       dockerfile: Dockerfile
     container_name: fair-dice-frontend
     ports:
-      - "3000:443"
+      - "443:443"
     depends_on:
       - backend
