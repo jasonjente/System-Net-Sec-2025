@@ -73,10 +73,10 @@ function DigitalDiceGame() {
 
             {message && <p>{message}</p>}
 
-            {/* Display the stored hash from localStorage */}
+            {/* Display the stored hash from localStorage 
             {localStorage.getItem('gameHash') && (
                 <p>Stored Hash: {localStorage.getItem('gameHash')}</p>
-            )}
+            )}*/}
         </div>
     );
 }

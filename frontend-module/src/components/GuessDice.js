@@ -11,6 +11,7 @@ function GuessDice() {
     const [serverHash, setServerHash] = useState('');
     const [storedHash, setStoredHash] = useState('');
     const [showDetails, setShowDetails] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false); // Track if the guess has been submitted
 
     // Handle the guess form submission
     const handleGuessSubmit = async (e) => {
@@ -41,6 +42,7 @@ function GuessDice() {
                 const result = await response.json();
                 setGameResult(result);  // Assuming the response is the result of the game
                 setMessage('Your guess was submitted successfully!');
+                setIsSubmitted(true); // Mark the guess as submitted
 
                 // Retrieve the stored hash from localStorage (gameHash from DigitalDiceGame)
                 const storedHash = localStorage.getItem('gameHash');
@@ -110,6 +112,16 @@ function GuessDice() {
         setClientHash('');
         setServerHash('');
         setStoredHash('');
+        setIsSubmitted(false); // Reset submission state
+
+        // Function to generate a random string based on the current timestamp
+        const generateRandomString = () => {
+            const timestamp = Date.now(); // Current time in milliseconds
+            const randomPart = Math.random().toString(36).substring(2, 15); // Random alphanumeric string
+            return `${timestamp}-${randomPart}`; // Combine timestamp with the random part
+        };
+
+        const clientRandomString = generateRandomString(); // Generate the random string based on time
 
         try {
             const token = localStorage.getItem('jwtToken');
@@ -118,12 +130,8 @@ function GuessDice() {
                 return;
             }
 
-            // Generate new random client string (32-char hex)
-            const newClientRandomString = crypto.getRandomValues(new Uint8Array(16))
-                .reduce((acc, byte) => acc + byte.toString(16).padStart(2, '0'), '');
-
             // Call startGame with the new client string
-            const response = await fetch(`/api/game/${newClientRandomString}`, {
+            const response = await fetch(`/api/game/${clientRandomString}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -143,7 +151,6 @@ function GuessDice() {
         }
     };
 
-
     return (
         <div style={{ textAlign: 'center', marginTop: 50 }}>
             <h2>Make Your Dice Guess</h2>
@@ -158,10 +165,15 @@ function GuessDice() {
                             min="1"
                             max="6"
                             required
+                            disabled={isSubmitted} // Disable button after submission
                         />
                     </label>
                 </div>
-                <button type="submit" style={{ marginTop: 10 }}>Submit Guess</button>
+                {!isSubmitted && ( // Only show the submit button if the guess hasn't been submitted
+                    <button type="submit" style={{ marginTop: 10 }}>
+                        Submit Guess
+                    </button>
+                )}
             </form>
 
             {/* Display messages */}
@@ -201,7 +213,6 @@ function GuessDice() {
                     )}
                 </div>
             )}
-
 
             {/* Log off button */}
             <button onClick={handleLogOff} style={{ marginTop: 20 }}>
