@@ -18,16 +18,20 @@ function Login() {
             });
 
             if (response.ok) {
+                console.log("Login was successful. Response status: ", response.status);
+                console.log("Getting JWT Token...: ");
                 const data = await response.json();
                 const token = data.token;
+                console.log("Successfully got token. Token is: ", token);
                 localStorage.setItem('jwtToken', token);
-
                 setMessage('Login successful!');
                 navigate('/digital-dice-game');
             } else {
+                console.log("Login failed. Response status: ", response.status);
                 setMessage('Login failed. Check your credentials.');
             }
         } catch (error) {
+            console.error("Error connecting to server")
             setMessage('Error connecting to server.');
         }
     };

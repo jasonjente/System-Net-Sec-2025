@@ -13,6 +13,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Registration procedure started...");
 
         try {
             const response = await fetch('/api/auth/register', {
@@ -28,13 +29,16 @@ function Register() {
             });
 
             if (response.ok) {
+                console.log("Registration succssful! Redirecting to login...")
                 setMessage('Registration successful! Redirecting to login...');
                 setTimeout(() => navigate('/login'), 1500);
             } else {
                 const data = await response.json();
+                console.error("Registration failed");
                 setMessage(data.details || 'Registration failed.');
             }
         } catch (error) {
+            console.error("Server error");
             setMessage('Server error.');
         }
     };

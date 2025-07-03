@@ -14,11 +14,14 @@ function DigitalDiceGame() {
 
     // Handle the start button click
     const handleStart = async () => {
+        console.log("Game started, generating random string");
         const clientRandomString = generateRandomString(); // Generate the random string based on time
+        console.log("Random string generated. String is: ", clientRandomString);
 
         try {
             const token = localStorage.getItem('jwtToken');
             if (!token) {
+                console.log("You are not currently logged in")
                 setMessage('Please log in first.');
                 return;
             }
@@ -33,17 +36,23 @@ function DigitalDiceGame() {
             });
 
             if (response.ok) {
+                console.log("Successfully sent string to server. Response is: ", response.status);
                 const hashResult = await response.text();
+                console.log("Successfully got hash from server: Hash is: ", hashResult)
+                console.log("Storing hash to localStorage...")
                 localStorage.setItem('gameHash', hashResult);  // Store the hash in localStorage
+                console.log("Hash is now stored to localStorage")
                 setMessage(`Game started! Hash result: ${hashResult}`);
                 console.log('Game started:', hashResult);
 
                 // Navigate to the GuessDice page once the game is successfully started
                 navigate('/guess-dice');
             } else {
+                console.error("Failed to start the game. Please try again")
                 setMessage('Failed to start the game. Please try again.');
             }
         } catch (error) {
+            console.error("Error connecting to the server")
             setMessage('Error connecting to the server.');
             console.error(error);
         }
@@ -53,6 +62,7 @@ function DigitalDiceGame() {
     const handleLogOff = () => {
         // Remove the JWT token from localStorage
         localStorage.removeItem('jwtToken');
+        console.log("You have been logged off")
         setMessage('You have been logged off.');
 
         // Redirect to the login page

@@ -18,6 +18,7 @@ function GuessDice() {
         e.preventDefault();
 
         if (guess < 1 || guess > 6) {
+            console.log("Number entered not between 1 and 6.");
             setMessage('Please enter a number between 1 and 6.');
             return;
         }
@@ -25,11 +26,13 @@ function GuessDice() {
         try {
             const token = localStorage.getItem('jwtToken');
             if (!token) {
+                console.log("You have to log in first...");
                 setMessage('Please log in first.');
                 return;
             }
 
             // Send the guess to the backend
+            console.log("Sending guess to server. Guess is: ", guess)
             const response = await fetch(`/api/game/guess/${guess}`, {
                 method: 'POST',
                 headers: {
@@ -39,42 +42,55 @@ function GuessDice() {
             });
 
             if (response.ok) {
+                console.log("Guess submitted successfully! Retrieving server's response");
                 const result = await response.json();
+                console.log("Server's Guess:", result.serverGuess);
+                console.log("Server's stored ClientRandomString:", result.randomClientString);
+                console.log("Server's stored ServerRandomString:", result.randomServerString);
                 setGameResult(result);  // Assuming the response is the result of the game
                 setMessage('Your guess was submitted successfully!');
                 setIsSubmitted(true); // Mark the guess as submitted
 
                 // Retrieve the stored hash from localStorage (gameHash from DigitalDiceGame)
+                console.log("Retrieving stored hash")
                 const storedHash = localStorage.getItem('gameHash');
                 if (!storedHash) {
+                    console.error("Error, game hash not found");
                     setMessage('Error: Game hash not found. Please start a new game.');
                     return;
                 }
+                console.log("Successfully got hash: ", storedHash)
                 setStoredHash(storedHash); // Set the stored hash to be displayed
 
+                console.log("Calculating Client's hash...");
                 // Calculate the hash on the client side using server's response
                 const calculatedClientHash = await calculateHash(
                     result.serverGuess,
                     result.randomClientString,
                     result.randomServerString
                 );
+                console.log("Calculated Hash is: ", calculatedClientHash);
 
                 // Set client-side and server hashes for display
                 setClientHash(calculatedClientHash);
                 setServerHash(result.serverHash);
 
+                console.log("Comparing the calculated hash and stored hash...");
                 // Compare the calculated hash with the stored hash
                 if (calculatedClientHash === storedHash) {
                     setIsHashMatch(true);
+                    console.log("Hashes are the same, game is fair");
                     setMessage('The result is fair!');
                 } else {
                     setIsHashMatch(false);
+                    console.log("Hashes are not the same, game not fair");
                     setMessage('Result not accepted: Not fair.');
                 }
             } else {
                 setMessage('Last game was finished, please press play again.');
             }
         } catch (error) {
+            console.log("Error connecting to server")
             setMessage('Error connecting to the server.');
             console.error(error);
         }
@@ -97,6 +113,7 @@ function GuessDice() {
     const handleLogOff = () => {
         // Remove the JWT token from localStorage
         localStorage.removeItem('jwtToken');
+        console.log("User logged off")
         setMessage('You have been logged off.');
 
         // Redirect to the login page
@@ -126,10 +143,12 @@ function GuessDice() {
         try {
             const token = localStorage.getItem('jwtToken');
             if (!token) {
+                console.log("You need to login again");
                 setMessage('Please log in again.');
                 return;
             }
 
+            console.log("New game started");
             // Call startGame with the new client string
             const response = await fetch(`/api/game/${clientRandomString}`, {
                 method: 'POST',
@@ -139,13 +158,20 @@ function GuessDice() {
             });
 
             if (response.ok) {
+                console.log("Successfully sent string to server. Response is: ", response.status);
                 const hash = await response.text();
+                console.log("Successfully got hash from server: Hash is: ", hash)
+                console.log("Storing hash to localStorage...")
                 localStorage.setItem('gameHash', hash);
+                console.log("Hash is now stored to localStorage");
                 setMessage('New game started. Make your guess!');
+                console.log('Game started:', hash);
             } else {
+                console.error("Failed to start a new game")
                 setMessage('Failed to start a new game.');
             }
         } catch (error) {
+            console.error("Error starting new games")
             setMessage('Error starting new game.');
             console.error(error);
         }
