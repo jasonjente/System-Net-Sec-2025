@@ -24,6 +24,15 @@ public class GameController {
     private final GamePort gamePort;
     private final UserQueryPort userQueryPort;
 
+    /**
+     * Exposes an HTTP POST Endpoint expecting a random client string that can be used
+     * for the verification of the validity of the game results.
+     *
+     * @param clientRandomString the client random string used for validity.
+     * @param principal          spring will automatically inject this after the request has passed the spring security
+     *                           filters, and it will contain the full User object.
+     * @return                   A response entity with 200-OK and the hash result of the server guess.
+     */
     @PostMapping("/{clientRandomString}")
     public ResponseEntity<String> startGame(final @PathVariable String clientRandomString,
                                             final @AuthenticationPrincipal User principal) {
@@ -33,6 +42,14 @@ public class GameController {
         return ResponseEntity.ok(hashResult);
     }
 
+    /**
+     * Exposes an HTTP POST Endpoint expecting an integer bound between 1 and 6, which will be the client guess.
+     *
+     * @param guess     the client guess for the expected outcome of the dice throw.
+     * @param principal spring will automatically inject this after the request has passed the spring security
+     *                           filters, and it will contain the full User object.
+     * @return          returns a DTO containing the game results.
+     */
     @PostMapping("/guess/{guess}")
     public ResponseEntity<GameResultDTO> clientGuess(final @PathVariable Integer guess,
                                                      final @AuthenticationPrincipal User principal) {

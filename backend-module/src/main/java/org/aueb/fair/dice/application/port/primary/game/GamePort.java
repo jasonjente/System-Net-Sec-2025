@@ -13,5 +13,12 @@ public interface GamePort {
      */
     String startGame(String randomClientString, Long userId);
 
+    /**
+     * Finishes a game based on the client guess that is provided. If no game is associated with the client
+     * an exception will be thrown returning the appropriate HTTP Code and error message.
+     * @param clientGuess the client dice guess.
+     * @param userId      the user id that associated with this game.
+     * @return            the game result by comparing the stored result and the client guess.
+     */
     GameResult loadClientGuess(Integer clientGuess, Long userId);
 }

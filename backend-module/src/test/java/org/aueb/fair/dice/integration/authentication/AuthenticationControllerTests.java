@@ -1,7 +1,7 @@
 package org.aueb.fair.dice.integration.authentication;
 
 
-import org.aueb.fair.dice.infrastructure.adapter.primary.web.controller.AuthenticationController;
+import org.aueb.fair.dice.infrastructure.adapter.primary.web.controller.auth.AuthenticationController;
 import org.aueb.fair.dice.integration.BaseIntegrationTests;
 import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.JwtResponse;
 import org.aueb.fair.dice.infrastructure.adapter.primary.web.dto.LoginRequestDTO;

@@ -36,6 +36,17 @@ public class UserQueryService implements UserQueryPort {
     }
 
     /**
+     * Finds a user by their unique email.
+     *
+     * @param email the email to search for
+     * @return an Optional containing the User if found, or empty otherwise
+     */
+    @Override
+    public Optional<User> findByEmail(final String email) {
+        return userPersistencePort.findByEmail(email);
+    }
+
+    /**
      * Finds a user by their unique id.
      *
      * @param id the id to search for

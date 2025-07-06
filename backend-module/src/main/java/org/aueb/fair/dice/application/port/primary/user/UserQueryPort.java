@@ -21,6 +21,13 @@ public interface UserQueryPort {
     Optional<User> findByUsername(String username);
 
     /**
+     * Finds a user by their unique email.
+     *
+     * @param email the email to search for
+     * @return an Optional containing the User if found, or empty otherwise
+     */
+    Optional<User> findByEmail(String email);
+    /**
      * Finds a user by their unique id.
      *
      * @param id the id to search for

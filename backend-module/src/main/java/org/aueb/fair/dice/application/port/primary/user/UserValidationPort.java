@@ -11,10 +11,4 @@ public interface UserValidationPort {
      */
     void validateUserCreation(User user);
 
-    /**
-     * Performs a validation on an existing user object that will be updated.
-     *
-     * @param user the user that will be created.
-     */
-    void validateUserUpdate(User user);
 }

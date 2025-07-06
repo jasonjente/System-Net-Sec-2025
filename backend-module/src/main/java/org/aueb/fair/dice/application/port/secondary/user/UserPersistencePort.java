@@ -27,6 +27,14 @@ public interface UserPersistencePort {
     Optional<User> findByUsername(String username);
 
     /**
+     * Finds a domain user by their email by querying the repository and mapping the entity to domain.
+     *
+     * @param email the username to search for
+     * @return an Optional containing the domain user if found
+     */
+    Optional<User> findByEmail(String email);
+
+    /**
      * Fetches a user by id.
      *
      * @param id the user unique identifier.

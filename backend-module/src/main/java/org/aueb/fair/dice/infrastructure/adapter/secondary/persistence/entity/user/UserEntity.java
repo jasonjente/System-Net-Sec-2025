@@ -52,4 +52,10 @@ public class UserEntity {
      */
     @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
+
+    /**
+     * The user email.
+     */
+    @Column(name = "USER_EMAIL", nullable = false)
+    private String email;
 }

@@ -15,11 +15,4 @@ public interface UserCommandPort {
      * @param user the user to be registered, must contain valid credentials
      */
     void register(User user);
-
-    /**
-     * Registers a new user by encoding the password and storing the user through the persistence port.
-     *
-     * @param user the user to update
-     */
-    void update(User user);
 }

@@ -41,7 +41,7 @@ class UserPersistenceServiceTest {
 
     @Test
     void findByUsername_shouldMapEntityToDomain() {
-        UserEntity entity = new UserEntity(1L, "Jane", "Doe", "jane", "pw");
+        UserEntity entity = new UserEntity(1L, "Jane", "Doe", "jane", "pw", "email@email.com");
         User domain = new User(1L, "Jane", "Doe", "jane", "pw", "test@email.com");
 
         when(userRepository.findByUsername("jane")).thenReturn(Optional.of(entity));

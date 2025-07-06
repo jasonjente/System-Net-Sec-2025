@@ -2,9 +2,8 @@ package org.aueb.fair.dice.application.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.aueb.fair.dice.application.exception.user.UserCreationException;
-import org.aueb.fair.dice.application.exception.user.UserUpdateException;
+import org.aueb.fair.dice.application.port.primary.user.UserQueryPort;
 import org.aueb.fair.dice.application.port.primary.user.UserValidationPort;
-import org.aueb.fair.dice.application.port.secondary.user.UserPersistencePort;
 import org.aueb.fair.dice.domain.user.User;
 import org.aueb.fair.dice.domain.validation.ValidationErrorCollector;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserValidationService implements UserValidationPort {
 
-    private final UserPersistencePort userPersistencePort;
+    private final UserQueryPort userQueryPort;
 
     /**
      * Performs a validation on a user object that will be created.
@@ -22,11 +21,17 @@ public class UserValidationService implements UserValidationPort {
      */
     @Override
     public void validateUserCreation(final User user) {
-        var existingUserWithUsername = userPersistencePort.findByUsername(user.getUsername());
+        var existingUserWithUsername = userQueryPort.findByUsername(user.getUsername());
         var validationErrorCollector = new ValidationErrorCollector();
 
         if (existingUserWithUsername.isPresent()) {
             validationErrorCollector.addMessage("The username already exists");
+        }
+
+        var existingUserWithEmail = userQueryPort.findByEmail(user.getEmail());
+
+        if (existingUserWithEmail.isPresent()) {
+            validationErrorCollector.addMessage("The email already exists");
         }
 
         // if the user provides an id for the creation should either be banned via his IP or
@@ -40,26 +45,4 @@ public class UserValidationService implements UserValidationPort {
         }
     }
 
-    /**
-     * Performs a validation on an existing user object that will be updated.
-     *
-     * @param user the user that will be created.
-     */
-    @Override
-    public void validateUserUpdate(final User user) {
-        var existingUserWithUsername = userPersistencePort.findByUsername(user.getUsername());
-        var validationErrorCollector = new ValidationErrorCollector();
-
-        if (existingUserWithUsername.isEmpty()) {
-            validationErrorCollector.addMessage("Username doesn't exist.");
-        }
-
-        if (user.getId() != null) {
-            validationErrorCollector.addMessage("User id cannot be empty.");
-        }
-
-        if (validationErrorCollector.hasErrors()) {
-            throw new UserUpdateException(validationErrorCollector.printMessages());
-        }
-    }
 }

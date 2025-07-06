@@ -44,6 +44,18 @@ public class UserPersistenceService implements UserPersistencePort {
     }
 
     /**
+     * Finds a domain user by their email by querying the repository and mapping the entity to domain.
+     *
+     * @param email the username to search for
+     * @return an Optional containing the domain user if found
+     */
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userEntityMapper::mapFromEntity);
+    }
+
+    /**
      * Fetches a user by id.
      *
      * @param id the user unique identifier.

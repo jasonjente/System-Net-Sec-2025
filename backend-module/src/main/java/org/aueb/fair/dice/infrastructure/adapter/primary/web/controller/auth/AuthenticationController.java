@@ -1,4 +1,4 @@
-package org.aueb.fair.dice.infrastructure.adapter.primary.web.controller;
+package org.aueb.fair.dice.infrastructure.adapter.primary.web.controller.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -42,17 +42,19 @@ public class GameService implements GamePort {
      */
     @Override
     public String startGame(final String randomClientString, final Long userId) {
+        log.info("Retrieved a request to start a game.");
         var user = userQueryPort.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User couldn't be retrieved."));
         var unfinishedGames = this.gamePersistencePort.getGameResultsByUserId(user.getId());
 
         if (!unfinishedGames.isEmpty()) {
+            log.info("User has unfinished games, deleting all but the last game.");
             sortByDateDescAndKeepTheLatest(unfinishedGames, randomClientString, user);
         }
 
         var gameResult =
                 unfinishedGames.isEmpty() ? buildGameResult(randomClientString, user) : unfinishedGames.getFirst();
-
+        log.info("Saving new game result.");
         var persistedResult = this.gamePersistencePort.create(gameResult);
         var hashingPort = new SHA256HashingService();
         var hash = hashingPort.hashConcatenation(String.valueOf(persistedResult.getServerGuess()),
@@ -85,6 +87,7 @@ public class GameService implements GamePort {
         var serverHash = extractHashedGuess(gameResult.getServerGuess(), gameResult);
 
         var clientWins = clientHash.equals(serverHash);
+        log.info("Setting game to ended state.");
         gameResult.setWin(clientWins);
         gameResult.setEnded(true);
         this.gamePersistencePort.delete(gameResult.getId());
@@ -110,12 +113,13 @@ public class GameService implements GamePort {
         unfinishedGames.sort(Comparator.comparing(GameResult::getTimestamp).reversed());
         unfinishedGames.stream()
                 .skip(1)
+                // Delete the rest of the games and keep only the latest.
                 .forEach(gameResult -> this.gamePersistencePort.delete(gameResult.getId()));
     }
 
     private GameResult buildGameResult(final String randomClientString, final User user) {
         RandomResourceGeneratorService randomNumberGeneratorService = new RandomResourceGeneratorService();
-        Integer serverGuess = randomNumberGeneratorService.nextInt(7); // the outer bound is exclusive [0, 6]
+        Integer serverGuess = randomNumberGeneratorService.nextInt(7); // the outer bound is exclusive [0, 6)
         String randomServerString = randomNumberGeneratorService.nextString();
 
         return GameResult.builder()
