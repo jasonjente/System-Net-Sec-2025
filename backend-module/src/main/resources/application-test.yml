@@ -28,11 +28,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:import.sql
-
   jackson:
     serialization:
       indent_output: true

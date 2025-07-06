@@ -84,7 +84,6 @@ backend-module/
 │ │ │ └── UserRegistrationRequestDTOMapper
 │ │ └── resources/
 │ │ ├── application.yml
-│ │ ├── import.sql
 │ │ ├── README.md
 │ │ └── progress.md
 │ └── test/
